@@ -104,18 +104,36 @@ def process_callback_verify(call: telebot.types.CallbackQuery):
     paid_member = paid_members_collection.find_one({'user_id': user_id})
 
     if user_data and user_data.get('received_netflix_button'):
-        if paid_member and paid_member['expiry'] > datetime.now():
-            bot.send_message(
-                chat_id=user_id,
-                text="Your subscription is still active. You can use the Netflix button again."
-            )
-            return
-        else:
-            bot.send_message(
-                chat_id=user_id,
-                text="Your subscription has expired. Please start the bot again to get a new subscription."
-            )
-            return
+        if paid_member:
+            remaining_days = (paid_member['expiry'] - datetime.now()).days
+            if remaining_days > 0:
+                bot.send_message(
+                    chat_id=user_id,
+                    text=f"Your subscription is still active. You have {remaining_days} days left. You can use the Netflix button again."
+                )
+                keyboard = types.InlineKeyboardMarkup()
+                keyboard.add(
+                    types.InlineKeyboardButton("Watch Netflix", web_app=types.WebAppInfo(url="https://iosmirror.cc/home?app=1"))
+                )
+                try:
+                    message = bot.send_message(
+                        chat_id=user_id,
+                        text="Press the Watch Netflix button to use Netflix.",
+                        reply_markup=keyboard
+                    )
+                    # Delete the Netflix button message after 25 seconds
+                    time.sleep(25)
+                    bot.delete_message(chat_id=user_id, message_id=message.message_id)
+                    bot.send_message(chat_id=user_id, text="The Netflix button has expired. Please start the bot again.")
+                except telebot.apihelper.ApiTelegramException as e:
+                    logging.error(f"Failed to send Netflix message to user {user_id}: {e}")
+                return
+            else:
+                bot.send_message(
+                    chat_id=user_id,
+                    text="Your subscription has expired. Please start the bot again to get a new subscription."
+                )
+                return
 
     # Verification check
     try:
