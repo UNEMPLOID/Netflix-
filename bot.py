@@ -99,14 +99,15 @@ def process_callback_verify(call: telebot.types.CallbackQuery):
     user_id = call.from_user.id
     user_name = call.from_user.username or f"User_{user_id}"
 
-    # Check if the user has already received the Netflix button
+    # Retrieve user data and check subscription status
     user_data = users_collection.find_one({'user_id': user_id})
+    paid_member = paid_members_collection.find_one({'user_id': user_id})
+
     if user_data and user_data.get('received_netflix_button'):
-        paid_member = paid_members_collection.find_one({'user_id': user_id})
         if paid_member and paid_member['expiry'] > datetime.now():
             bot.send_message(
                 chat_id=user_id,
-                text="You have already received the Netflix button. Your subscription is still active."
+                text="Your subscription is still active. You can use the Netflix button again."
             )
             return
         else:
