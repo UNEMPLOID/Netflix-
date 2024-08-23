@@ -94,7 +94,7 @@ def send_welcome(message: telebot.types.Message):
     except telebot.apihelper.ApiTelegramException as e:
         logging.error(f"Failed to log new user start for user {user_id}: {e}")
 
- @bot.callback_query_handler(func=lambda call: call.data == 'verify')
+@bot.callback_query_handler(func=lambda call: call.data == 'verify')
 def process_callback_verify(call: telebot.types.CallbackQuery):
     user_id = call.from_user.id
     user_name = call.from_user.username or f"User_{user_id}"
@@ -102,7 +102,6 @@ def process_callback_verify(call: telebot.types.CallbackQuery):
     # Check if the user has already received the Netflix button
     user_data = users_collection.find_one({'user_id': user_id})
     if user_data and user_data.get('received_netflix_button'):
-        # Check if the user has a valid subscription
         paid_member = paid_members_collection.find_one({'user_id': user_id})
         if paid_member and paid_member['expiry'] > datetime.now():
             bot.send_message(
@@ -154,15 +153,6 @@ def process_callback_verify(call: telebot.types.CallbackQuery):
             bot.send_message(chat_id=user_id, text="The Netflix button has expired. Please start the bot again.")
         except telebot.apihelper.ApiTelegramException as e:
             logging.error(f"Failed to send Netflix message to user {user_id}: {e}")
-    else:
-        try:
-            bot.send_message(
-                chat_id=user_id,
-                text="Please join all the required channels and group first to use the bot."
-            )
-        except telebot.apihelper.ApiTelegramException as e:
-            logging.error(f"Failed to send verification failure message to user {user_id}: {e}")
-
     else:
         try:
             bot.send_message(
@@ -251,4 +241,3 @@ while True:
     except Exception as e:
         logging.error(f"Bot polling failed: {e}")
         time.sleep(15)
-        
