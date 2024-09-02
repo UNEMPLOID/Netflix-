@@ -14,7 +14,7 @@ TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '7492081634:AAFc01F_exFFw4KhvFVn6Vu1xqx3
 LOG_GROUP_ID = int(os.getenv('LOG_GROUP_ID', '-1002155266073'))
 
 # Channels and group
-REQUIRED_CHANNELS = ["@falconsec", "@Falcon_security", "@Bot_Colony"]
+REQUIRED_CHANNELS = ["@oxygen_stores", "@Falcon_security", "@NeetTitansNetwork"]
 REQUIRED_GROUP = "-1001685012914"  # Updated group chat ID
 OWNER_ID = int(os.getenv('OWNER_ID', '5460343986'))  # Use the owner ID directly
 
@@ -64,18 +64,18 @@ def send_welcome(message: telebot.types.Message):
     # Inline buttons
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(
-        types.InlineKeyboardButton("FALCONSEC", url="https://t.me/falconsec"),
+        types.InlineKeyboardButton("OXY STORE", url="https://t.me/oxygen_stores"),
         types.InlineKeyboardButton("FALCON SECURITY", url="https://t.me/Falcon_security")
     )
     keyboard.add(
-        types.InlineKeyboardButton("Support Chat", url="https://t.me/INDIAN_HACKER_GROUP"),
-        types.InlineKeyboardButton("BOT COLONY", url="https://t.me/BOT_COLONY")
+        types.InlineKeyboardButton("INDIAN HACKER", url="https://t.me/INDIAN_HACKER_GROUP"),
+        types.InlineKeyboardButton("THE TITANS", url="https://t.me/NeetTitansNetwork")
     )
     keyboard.add(
         types.InlineKeyboardButton("Verify", callback_data='verify')
     )
     keyboard.add(
-        types.InlineKeyboardButton("Owner", url="https://t.me/Moon_God_Khonsu")
+        types.InlineKeyboardButton("Owner", url="https://t.me/Jadugar_Titann")
     )
 
     # Welcome message
